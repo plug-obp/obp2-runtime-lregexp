@@ -1,0 +1,8 @@
+*.iml
+.settings
+.classpath
+.project
+/bin/
+.gradle/
+out/
+build
