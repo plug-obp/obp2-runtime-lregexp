@@ -50,6 +50,10 @@ package obp2.language.lregexp.model;
 public class LRegExpCharReader {
     LRegExp.Expression<Character> context;
 
+    public LRegExp.Expression<Character> readExpression(String string) {
+        StringIterator iterator = new StringIterator(string);
+        return readExpression(iterator);
+    }
     public LRegExp.Expression<Character> readExpression(StringIterator iterator) {
         LRegExp.Expression<Character> expression = readEmpty(iterator);
         if (expression != null) {
