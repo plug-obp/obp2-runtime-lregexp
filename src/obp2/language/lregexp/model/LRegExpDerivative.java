@@ -30,8 +30,8 @@ public class LRegExpDerivative<T> extends LRegExp.FunctionalVisitor<T, T, LRegEx
     }
 
     LRegExp.Expression<T> delta(LRegExp.Expression<T> node) {
-        Nullabity<T> nullabity = new Nullabity<>();
-        return node.accept(nullabity, null);
+        LRegExpNullability<T> nullability = new LRegExpNullability<>();
+        return node.accept(nullability, null);
     }
 
     @Override
@@ -79,44 +79,3 @@ public class LRegExpDerivative<T> extends LRegExp.FunctionalVisitor<T, T, LRegEx
     }
 }
 
-class Nullabity<T> extends LRegExp.FunctionalVisitor<T, Void, LRegExp.Expression<T>> {
-    LRegExp.Expression<T> nullability(LRegExp.Expression<T> node) {
-        return node.accept(this, null);
-    }
-
-    @Override
-    LRegExp.Expression<T> visit(LRegExp.Empty<T> node, Void input) {
-        return new LRegExp.Empty<>();
-    }
-
-    @Override
-    LRegExp.Expression<T> visit(LRegExp.Epsilon<T> node, Void input) {
-        return new LRegExp.Epsilon<>();
-    }
-
-    @Override
-    LRegExp.Expression<T> visit(LRegExp.Token<T> node, Void input) {
-        return new LRegExp.Empty<>();
-    }
-
-    @Override
-    LRegExp.Expression<T> visit(LRegExp.Union<T> node, Void input) {
-        return new LRegExp.Union<>(
-                nullability(node.operands.get(0)),
-                nullability(node.operands.get(1))
-        );
-    }
-
-    @Override
-    LRegExp.Expression<T> visit(LRegExp.Concatenation<T> node, Void input) {
-        return new LRegExp.Concatenation<>(
-                nullability(node.operands.get(0)),
-                nullability(node.operands.get(1))
-        );
-    }
-
-    @Override
-    LRegExp.Expression<T> visit(LRegExp.KleeneStar<T> node, Void input) {
-        return new LRegExp.Epsilon<>();
-    }
-}
