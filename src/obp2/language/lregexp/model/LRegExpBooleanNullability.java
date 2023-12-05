@@ -22,44 +22,40 @@
  * SOFTWARE.
  */
 
-package obp2.language.lregexp.runtime;
+package obp2.language.lregexp.model;
 
-import obp2.core.defaults.DefaultConfiguration;
-import obp2.language.lregexp.model.LRegExp;
+public class LRegExpBooleanNullability<T> extends LRegExp.FunctionalVisitor<T, Void, Boolean> {
+    Boolean nullability(LRegExp.Expression<T> node) {
+        return node.accept(this, null);
+    }
 
-import java.util.Objects;
+    @Override
+    Boolean visit(LRegExp.Empty<T> node, Void input) {
+        return false;
+    }
 
-public class LRegExpConfiguration<T> extends DefaultConfiguration<LRegExpConfiguration<T>> {
-	public LRegExp.Expression<T> expression;
-	
-	@Override
-	public LRegExpConfiguration<T> createCopy() {
-		LRegExpConfiguration<T> newC = new LRegExpConfiguration<T>();
-		//TODO: do we need a deep-copy here?
-		newC.expression = expression;
-		return newC;
-	}
+    @Override
+    Boolean visit(LRegExp.Epsilon<T> node, Void input) {
+        return true;
+    }
 
-	public LRegExpConfiguration() {
-		this.expression = null;
-	}
+    @Override
+    Boolean visit(LRegExp.Token<T> node, Void input) {
+        return false;
+    }
 
-	public LRegExpConfiguration(LRegExp.Expression<T> expression) {
-		this.expression = Objects.requireNonNull(expression);
-	}
+    @Override
+    Boolean visit(LRegExp.Union<T> node, Void input) {
+        return nullability(node.operands.get(0)) || nullability(node.operands.get(1));
+    }
 
-	@Override
-	public int hashCode() {
-		return expression.hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj) || (obj instanceof LRegExpConfiguration && expression.equals(((LRegExpConfiguration<?>) obj).expression));
-	}
+    @Override
+    Boolean visit(LRegExp.Concatenation<T> node, Void input) {
+        return nullability(node.operands.get(0)) && nullability(node.operands.get(1));
+    }
 
-	@Override
-	public String toString() {
-		return String.valueOf(expression);
-	}
+    @Override
+    Boolean visit(LRegExp.KleeneStar<T> node, Void input) {
+        return true;
+    }
 }

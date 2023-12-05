@@ -29,3 +29,15 @@ a|bc
 parses to:
 
 ![img.png](./img.png)
+
+## Derivatives
+
+```scala
+D ∅         t ≜ ∅
+D ϵ         t ≜ ∅
+D (τ o)     o ≜ ϵ
+D (τ o)     t ≜ ∅, where o ≠ c
+D (L₁ | L₂) t ≜ (D L₁ t) | (D L₂ t)
+D (L₁ ∘ L₂) t ≜ (D L₁ t) ∘ L₂ | (Δ L₁) ∘ (D L₂ t)
+D (L₁*)     t ≜ (D L₁ t) ∘ (L₁*)
+```

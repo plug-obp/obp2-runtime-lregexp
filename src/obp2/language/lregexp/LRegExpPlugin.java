@@ -83,7 +83,7 @@ public class LRegExpPlugin implements ILanguagePlugin<URI, LRegExpConfiguration,
 
     @Override
     public String getName() {
-        return "LString";
+        return "LRegExp";
     }
 
 

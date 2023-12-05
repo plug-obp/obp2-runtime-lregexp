@@ -34,21 +34,26 @@ public class LRegExpDerivative<T> extends LRegExp.FunctionalVisitor<T, T, LRegEx
         return node.accept(nullability, null);
     }
 
+    //D ∅         t ≜ ∅
     @Override
     LRegExp.Expression<T> visit(LRegExp.Empty<T> node, T input) {
         return new LRegExp.Empty<>();
     }
 
+    //D ϵ         t ≜ ∅
     @Override
     LRegExp.Expression<T> visit(LRegExp.Epsilon<T> node, T input) {
         return new LRegExp.Empty<>();
     }
 
+    //D (τ o)     o ≜ ϵ
+    //D (τ o)     t ≜ ∅, where o ≠ c
     @Override
     LRegExp.Expression<T> visit(LRegExp.Token<T> node, T input) {
         return node.token == input ? new LRegExp.Epsilon<>() : new LRegExp.Empty<>();
     }
 
+    //D (L₁ | L₂) t ≜ (D L₁ t) | (D L₂ t)
     @Override
     LRegExp.Expression<T> visit(LRegExp.Union<T> node, T input) {
         return new LRegExp.Union<>(
@@ -57,7 +62,7 @@ public class LRegExpDerivative<T> extends LRegExp.FunctionalVisitor<T, T, LRegEx
         );
     }
 
-    //Dc(L1 ◦ L2) = (Dc(L1) ◦ L2) ∪ (δ(L1) ◦ Dc(L2)).
+    //D (L₁ ∘ L₂) t ≜ (D L₁ t) ∘ L₂ | (Δ L₁) ∘ (D L₂ t)
     @Override
     LRegExp.Expression<T> visit(LRegExp.Concatenation<T> node, T input) {
         return new LRegExp.Union<>(
@@ -70,6 +75,7 @@ public class LRegExpDerivative<T> extends LRegExp.FunctionalVisitor<T, T, LRegEx
         );
     }
 
+    //D (L₁*) t ≜ (D L₁) ∘ (L₁*)
     @Override
     LRegExp.Expression<T> visit(LRegExp.KleeneStar<T> node, T input) {
         return new LRegExp.Concatenation<>(

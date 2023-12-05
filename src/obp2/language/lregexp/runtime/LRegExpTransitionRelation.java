@@ -59,7 +59,7 @@ public class LRegExpTransitionRelation<T>
 	public Set<LRegExpConfiguration> initialConfigurations() {
 		Set<LRegExpConfiguration> initialSet = new HashSet<>();
 		LRegExpConfiguration config = new LRegExpConfiguration();
-		config.index = 0;
+//		config.index = 0;
 		return Collections.singleton(config);
 	}
 
@@ -74,7 +74,7 @@ public class LRegExpTransitionRelation<T>
 	public IFiredTransition<LRegExpConfiguration, LRegExpAction, Void> fireOneTransition(LRegExpConfiguration source, LRegExpAction transition) {
 		//create the new configuration
 		LRegExpConfiguration target = new LRegExpConfiguration();
-		target.index 	  = source.index + 1;
+//		target.index 	  = source.index + 1;
 
 		return new FiredTransition<>(source, target, transition);
 	}
